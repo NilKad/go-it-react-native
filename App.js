@@ -27,9 +27,9 @@ export default function App() {
           source={require("./assets/images/background.jpg")}
         >
           <RegistrationScreen
-            isActiveKeyboard={isActiveKeyboard}
-            setIsActiveKeyboard={setIsActiveKeyboard}
-            handlerCloseKeyboard={handlerCloseKeyboard}
+          // isActiveKeyboard={isActiveKeyboard}
+          // setIsActiveKeyboard={setIsActiveKeyboard}
+          // handlerCloseKeyboard={handlerCloseKeyboard}
           />
           {/* <LoginScreen
             isActiveKeyboard={isActiveKeyboard}
@@ -47,12 +47,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: "center",
+    alignItems: "center",
     // justifyContent: "flex-end",
   },
   background: {
     flex: 1,
     resizeMode: "cover",
+    width: "100%",
+
     // position: "relative",
     color: "#ffffff",
   },

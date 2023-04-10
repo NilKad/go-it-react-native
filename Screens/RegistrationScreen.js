@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import {
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -11,18 +12,15 @@ import {
 const initialState = { login: "", email: "", password: "" };
 const addBtn = require("../assets/images/add.jpg");
 
-export default function RegistrationScreen({
-  isActiveKeyboard,
-  setIsActiveKeyboard,
-  handlerCloseKeyboard,
-}) {
+export default function RegistrationScreen() {
   const [state, setState] = useState(initialState);
+  const [isActiveKeyboard, setIsActiveKeyboard] = useState(false);
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
 
-  const onSubmitt = () => {
-    console.log(state);
-    handlerCloseKeyboard();
+  const onSubmit = () => {
+    setIsActiveKeyboard(false);
+    Keyboard.dismiss();
     setState(initialState);
   };
 
@@ -43,20 +41,18 @@ export default function RegistrationScreen({
           <Image source={addBtn} style={styles.addBtn} alt="addBtn" />
         </View>
       </View>
-      <View style={styles.avatarWrapper}></View>
 
-      <View style={styles.titleWrapper}>
-        <Text style={styles.formTitle}>Регистрация</Text>
-      </View>
+      <Text style={styles.formTitle}>Регистрация</Text>
       <TextInput
         style={styles.formInput}
         placeholder="Логин"
         onFocus={() => setIsActiveKeyboard(true)}
-        onSubmitEditing={() => emailInput.current?.focus()}
         value={state.login}
+        blurOnSubmit={false}
         onChangeText={(value) =>
           setState((prev) => ({ ...prev, login: value }))
         }
+        onSubmitEditing={() => emailInput.current?.focus()}
       ></TextInput>
       <TextInput
         style={styles.formInput}
@@ -67,6 +63,7 @@ export default function RegistrationScreen({
           setState((prev) => ({ ...prev, email: value }))
         }
         ref={emailInput}
+        blurOnSubmit={false}
         onSubmitEditing={() => passwordInput.current?.focus()}
       ></TextInput>
       <TextInput
@@ -78,9 +75,10 @@ export default function RegistrationScreen({
           setState((prev) => ({ ...prev, password: value }))
         }
         ref={passwordInput}
-        onSubmitEditing={onSubmitt}
+        blurOnSubmit={false}
+        onSubmitEditing={onSubmit}
       ></TextInput>
-      <TouchableOpacity style={styles.button} onPress={onSubmitt}>
+      <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text style={styles.buttonText}>Зарегистрироваться</Text>
       </TouchableOpacity>
       <View style={styles.linkLogin}>
@@ -91,24 +89,11 @@ export default function RegistrationScreen({
   );
 }
 const styles = StyleSheet.create({
-  keyboardViev: {
-    // flex: 1,
-    // marginTop: "auto",
-  },
   formAuth: {
-    position: "relative",
+    // position: "relative",
     // marginTop: 120,
-    marginTop: "auto",
+    // marginTop: "auto",
     marginBottom: 0,
-    // flex: 1,
-    // justifyContent: "center",
-
-    // flex: 1,
-    // width: 100,
-    // justifyContent: "flex-end",
-    // alignContent: "flex-end",
-    // alignItems: "flex-end",
-    // alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -135,13 +120,11 @@ const styles = StyleSheet.create({
     bottom: 14,
     // color: "red",
   },
-  titleWrapper: {
-    alignItems: "center",
+  formTitle: {
     marginTop: 92,
     marginBottom: 35,
-  },
-  formTitle: {
     fontSize: 30,
+    textAlign: "center",
   },
   formInput: {
     padding: 16,
