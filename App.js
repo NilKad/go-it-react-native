@@ -1,20 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import {
+  ImageBackground,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import RegistrationScreen from "./Screens/RegistrationScreen";
+import LoginScreen from "./Screens/LoginScreen";
+// const backGround = require("./assets/images/background.jpg");
 
 export default function App() {
+  const [isActiveKeyboard, setIsActiveKeyboard] = useState(false);
+
+  const handlerCloseKeyboard = () => {
+    setIsActiveKeyboard(false);
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <TouchableWithoutFeedback onPress={handlerCloseKeyboard}>
+      <View style={styles.container} onPress={() => handlerCloseKeyboard()}>
+        <ImageBackground
+          style={styles.background}
+          source={require("./assets/images/background.jpg")}
+        >
+          <RegistrationScreen
+            isActiveKeyboard={isActiveKeyboard}
+            setIsActiveKeyboard={setIsActiveKeyboard}
+            handlerCloseKeyboard={handlerCloseKeyboard}
+          />
+          {/* <LoginScreen
+            isActiveKeyboard={isActiveKeyboard}
+            setIsActiveKeyboard={setIsActiveKeyboard}
+            handlerCloseKeyboard={handlerCloseKeyboard}
+          /> */}
+        </ImageBackground>
+        <StatusBar style="auto" />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    // alignItems: "center",
+    // justifyContent: "flex-end",
+  },
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+    // position: "relative",
+    color: "#ffffff",
+  },
+  keyboardViev: {
+    // flex: 1,
+    // marginTop: "auto",
   },
 });
