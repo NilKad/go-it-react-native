@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import {
+  Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -7,34 +9,51 @@ import {
   View,
 } from "react-native";
 
-const initialState = { email: "", password: "" };
+const initialState = { login: "", email: "", password: "" };
+const addBtn = require("../../assets/images/add.jpg");
 
-export default function LoginScreen({
-  isActiveKeyboard,
-  setIsActiveKeyboard,
-  handlerCloseKeyboard,
-}) {
+export default function RegistrationScreen({ navigation }) {
   const [state, setState] = useState(initialState);
+  const [isActiveKeyboard, setIsActiveKeyboard] = useState(false);
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
 
-  const onSubmitt = () => {
-    console.log(state);
-    handlerCloseKeyboard();
+  const onSubmit = () => {
+    setIsActiveKeyboard(false);
+    Keyboard.dismiss();
     setState(initialState);
   };
 
   return (
+    // <KeyboardAvoidingView
+    // behavior={Platform.OS === "ios" ? "padding" : "height"}
+    // style={styles.keyboardViev}
+    // >
+
     <View
       style={{
         ...styles.formAuth,
-        marginTop: isActiveKeyboard ? 92 : "auto",
+        marginTop: isActiveKeyboard ? 120 : "auto",
       }}
     >
-      <View style={styles.titleWrapper}>
-        <Text style={styles.formTitle}>Войти</Text>
+      <View style={styles.avatarWrapper}>
+        <View style={styles.avatar}>
+          <Image source={addBtn} style={styles.addBtn} alt="addBtn" />
+        </View>
       </View>
 
+      <Text style={styles.formTitle}>Регистрация</Text>
+      <TextInput
+        style={styles.formInput}
+        placeholder="Логин"
+        onFocus={() => setIsActiveKeyboard(true)}
+        value={state.login}
+        blurOnSubmit={false}
+        onChangeText={(value) =>
+          setState((prev) => ({ ...prev, login: value }))
+        }
+        onSubmitEditing={() => emailInput.current?.focus()}
+      ></TextInput>
       <TextInput
         style={styles.formInput}
         placeholder="Адрес электронной почты"
@@ -44,6 +63,7 @@ export default function LoginScreen({
           setState((prev) => ({ ...prev, email: value }))
         }
         ref={emailInput}
+        blurOnSubmit={false}
         onSubmitEditing={() => passwordInput.current?.focus()}
       ></TextInput>
       <TextInput
@@ -55,32 +75,33 @@ export default function LoginScreen({
           setState((prev) => ({ ...prev, password: value }))
         }
         ref={passwordInput}
-        onSubmitEditing={onSubmitt}
+        blurOnSubmit={false}
+        onSubmitEditing={onSubmit}
       ></TextInput>
-      <TouchableOpacity style={styles.button} onPress={onSubmitt}>
-        <Text style={styles.buttonText}>Войти</Text>
+      <TouchableOpacity style={styles.button} onPress={onSubmit}>
+        <Text style={styles.buttonText}>Зарегистрироваться</Text>
       </TouchableOpacity>
-      <View style={styles.linkLogin}>
-        <Text style={styles.linkText}>Нет аккаунта? Зарегистрироваться</Text>
+      <View
+        // onPress={navigation.navigate("Login")}
+        style={styles.linkLogin}
+      >
+        <Text
+          onPress={() => navigation.navigate("Login")}
+          style={styles.linkText}
+        >
+          Уже есть аккаунт? Войти
+        </Text>
       </View>
     </View>
+    // </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
   formAuth: {
-    position: "relative",
+    // position: "relative",
     // marginTop: 120,
-    marginTop: "auto",
+    // marginTop: "auto",
     marginBottom: 0,
-    // flex: 1,
-    // justifyContent: "center",
-
-    // flex: 1,
-    // width: 100,
-    // justifyContent: "flex-end",
-    // alignContent: "flex-end",
-    // alignItems: "flex-end",
-    // alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -91,14 +112,27 @@ const styles = StyleSheet.create({
   avatarWrapper: {
     alignItems: "center",
   },
-
-  titleWrapper: {
-    alignItems: "center",
-    marginTop: 32,
-    marginBottom: 35,
+  avatar: {
+    position: "absolute",
+    height: 120,
+    width: 120,
+    top: -60,
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+  },
+  addBtn: {
+    position: "absolute",
+    width: 25,
+    height: 25,
+    right: -12,
+    bottom: 14,
+    // color: "red",
   },
   formTitle: {
+    marginTop: 92,
+    marginBottom: 35,
     fontSize: 30,
+    textAlign: "center",
   },
   formInput: {
     padding: 16,

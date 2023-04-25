@@ -7,12 +7,60 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import LoginScreen from "./Screens/LoginScreen";
+import RegistrationScreen from "./Screens/auth/RegistrationScreen";
+import LoginScreen from "./Screens/auth/LoginScreen";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import PostScreen from "./Screens/main/PostScreen";
+import CreatePostsScreen from "./Screens/main/CreatePostsScreen";
+import ProfileScreen from "./Screens/ProfileScreen";
+
+const AuthStack = createNativeStackNavigator();
+const MainTabs = createBottomTabNavigator();
+
 // const backGround = require("./assets/images/background.jpg");
+
+const useRoute = (isAuth) => {
+  if (!isAuth) {
+    return (
+      <AuthStack.Navigator initialRouteName="Login">
+        <AuthStack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreen}
+        />
+        <AuthStack.Screen
+          options={{ headerShown: false }}
+          name="Register"
+          component={RegistrationScreen}
+        />
+      </AuthStack.Navigator>
+    );
+  } else {
+    return (
+      <MainTabs.Navigator>
+        <MainTabs.Screen
+          name="Публикации"
+          component={PostScreen}
+        ></MainTabs.Screen>
+        <MainTabs.Screen
+          name="CratePost"
+          component={CreatePostsScreen}
+        ></MainTabs.Screen>
+        <MainTabs.Screen
+          name="Profile"
+          component={ProfileScreen}
+        ></MainTabs.Screen>
+      </MainTabs.Navigator>
+    );
+  }
+};
 
 export default function App() {
   const [isActiveKeyboard, setIsActiveKeyboard] = useState(false);
+
+  const routing = useRoute(true);
 
   const handlerCloseKeyboard = () => {
     setIsActiveKeyboard(false);
@@ -20,28 +68,21 @@ export default function App() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={handlerCloseKeyboard}>
-      <View style={styles.container} onPress={() => handlerCloseKeyboard()}>
-        <ImageBackground
-          style={styles.background}
-          source={require("./assets/images/background.jpg")}
-        >
-          <RegistrationScreen
-          // isActiveKeyboard={isActiveKeyboard}
-          // setIsActiveKeyboard={setIsActiveKeyboard}
-          // handlerCloseKeyboard={handlerCloseKeyboard}
-          />
-          {/* <LoginScreen
-            isActiveKeyboard={isActiveKeyboard}
-            setIsActiveKeyboard={setIsActiveKeyboard}
-            handlerCloseKeyboard={handlerCloseKeyboard}
-          /> */}
-        </ImageBackground>
-        <StatusBar style="auto" />
-      </View>
-    </TouchableWithoutFeedback>
+    <NavigationContainer>
+      {routing}
+      {/* <TouchableWithoutFeedback onPress={handlerCloseKeyboard}>
+        <View style={styles.container} onPress={() => handlerCloseKeyboard()}>
+          <ImageBackground
+            style={styles.background}
+            source={require("./assets/images/background.jpg")}
+          ></ImageBackground>
+          <StatusBar style="auto" />
+        </View>
+      </TouchableWithoutFeedback> */}
+    </NavigationContainer>
   );
 }
+// auth
 
 const styles = StyleSheet.create({
   container: {
